@@ -1,0 +1,33 @@
+# Entornos virtuales
+venv/
+env/
+ENV/
+.venv/
+.env/
+
+# Archivos de sistema
+__pycache__/
+*.py[cod]
+*.swp
+.DS_Store
+
+# Base de datos local
+*.sqlite
+*.db
+
+# Configuración del editor
+.vscode/
+.idea/
+*.code-workspace
+
+# Archivos de log y cache
+*.log
+*.bak
+*.tmp
+*.orig
+
+# Archivos de Uvicorn/PM2 temporales
+*.pid
+
+FastApi412
+database.sqlite
