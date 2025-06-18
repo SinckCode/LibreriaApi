@@ -1,27 +1,31 @@
-name: Deploy LibreriaApi
+name: Deploy LibreriaAPI to Server
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main  # o la rama que uses
 
 jobs:
-  build:
+  deploy:
+    name: Deploy to Ubuntu Server
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout del repositorio
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Configurar Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.11
+    - name: Set up SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_ed25519
+        chmod 600 ~/.ssh/id_ed25519
+        ssh-keyscan -H 104.248.118.8 >> ~/.ssh/known_hosts
 
-      - name: Instalar dependencias
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Verificar que el código corre (opcional)
-        run: |
-          echo "El backend está listo para desplegar"
+    - name: Deploy and Restart with PM2
+      run: |
+        ssh -i ~/.ssh/id_ed25519 root@104.248.118.8 << 'EOF'
+          cd ~/LibreriaApi
+          git pull origin main
+          source venv/bin/activate
+          pm2 restart ecosystem.config.js --update-env
+        EOF
