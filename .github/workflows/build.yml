@@ -3,7 +3,7 @@ name: Deploy LibreriaAPI to Server
 on:
   push:
     branches:
-      - main  # o la rama que uses
+      - main
 
 jobs:
   deploy:
